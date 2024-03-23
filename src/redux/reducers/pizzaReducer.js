@@ -1,31 +1,33 @@
+import { ADD_ORDER, DELETE_ORDER, UPDATE_ORDER_STAGE } from "../actions/pizzaActions";
+
 const initialState = {
   orders: [],
-  totalDelivered: 0,
 };
 
-const pizzaReducer = (state = initialState, action) => {
+const orderReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'PLACE_ORDER':
+    case ADD_ORDER:
       return {
         ...state,
-        orders: [...state.orders, { ...action.payload, stage: 'Order Placed', startTime: new Date(), timeSpent: 0 }],
+        orders: [...state.orders, { ...action.payload, stage: "Order Placed" }],
       };
-    case 'UPDATE_ORDER_STAGE':
-      return {
-        ...state,
-        orders: state.orders.map((order) =>
-          order.id === action.payload.orderId ? { ...order, stage: action.payload.stage } : order
-        ),
-      };
-    case 'CANCEL_ORDER':
+    case DELETE_ORDER:
       return {
         ...state,
         orders: state.orders.filter((order) => order.id !== action.payload),
+      };
+    case UPDATE_ORDER_STAGE:
+      return {
+        ...state,
+        orders: state.orders.map((order) =>
+          order.id === action.payload.orderId
+            ? { ...order, stage: action.payload.stage }
+            : order
+        ),
       };
     default:
       return state;
   }
 };
 
-export default pizzaReducer;
-
+export default orderReducer;

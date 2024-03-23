@@ -1,8 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './reducers/pizzaReducer';
+import { combineReducers, createStore } from "redux";
+import orderReducer from "../redux/reducers/pizzaReducer";
 
-const store = configureStore({
-  reducer: rootReducer
+const rootReducer = combineReducers({
+  order: orderReducer,
 });
+
+const store = createStore(rootReducer);
 
 export default store;

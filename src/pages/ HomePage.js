@@ -6,10 +6,10 @@ const HomePage = () => {
   return (
     <div>
       {" "}
-      HomePage
-      <MainDisplay />
-      <PizzaOrders />
       <PizzaForm />
+      <PizzaOrders />
+      <MainDisplay />
+
     </div>
   );
 };
