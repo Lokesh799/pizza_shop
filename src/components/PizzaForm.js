@@ -4,8 +4,13 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import CustomSelect from './ui/CustomSelect';
+import CustomSelect from './ui/Select';
 import CustomForm from './ui/CustomForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { placeOrder } from '../redux/actions/pizzaActions';
+import { v4 as uuidv4 } from 'uuid';
+
+
 
 
 const GlobalTypography = () => (
@@ -34,6 +39,8 @@ const ModalContent = styled(Box)(({ theme }) => ({
 }));
 
 const PizzaForm = () => {
+  const dispatch = useDispatch();
+  const orders = useSelector((state) => state.orders);
   const [order, setOrder] = useState({ type: 'Veg', size: 'Large', base: 'Thin' });
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -43,8 +50,13 @@ const PizzaForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(order);
-    setModalOpen(false);
+    if (orders.length < 10) {
+      const newOrder = { ...order, id: uuidv4(), stage: 'Order Placed', timeSpent: 0 };
+      dispatch(placeOrder(newOrder));
+      setOrder({ type: 'Veg', size: 'Large', base: 'Thin' });
+    } else {
+      alert('Not taking any order for now');
+    }
   };
 
   const handleCancel = () => {

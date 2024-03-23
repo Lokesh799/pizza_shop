@@ -1,14 +1,14 @@
 import React from "react";
-import PizzaCard from "../components/PizzaCard";
-import { PizzaStage } from "../components/PizzaStage";
+import PizzaOrders from "../components/PizzaStage"
 import PizzaForm from "../components/PizzaForm";
+import MainDisplay from "../components/PizzaCard"
 const HomePage = () => {
   return (
     <div>
       {" "}
       HomePage
-      <PizzaCard />
-      <PizzaStage />
+      <MainDisplay />
+      <PizzaOrders />
       <PizzaForm />
     </div>
   );
