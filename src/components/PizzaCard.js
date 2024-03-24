@@ -48,7 +48,15 @@ const MainDisplay = () => {
   return (
     <div>
       <h2>Main Display</h2>
-      <Typography variant="h6">
+      <Typography  variant="h6"
+      sx={{
+        textAlign: 'center', 
+        fontWeight: 'bold', 
+        color: '#3f51b5', 
+        backgroundColor: '#e8eaf6', 
+        padding: '10px', 
+        borderRadius: '10px', 
+      }}>
         Total Delivered Items: {totalDeliveredItems}
       </Typography>
       <TableContainer component={Paper}>
