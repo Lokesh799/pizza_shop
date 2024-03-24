@@ -61,6 +61,7 @@ const PizzaForm = () => {
       };
       dispatch(addOrder(newOrder));
       setOrder({ type: "Veg", size: "Large", base: "Thin" });
+      setModalOpen(!modalOpen);
     } else {
       alert("Not taking any order for now");
     }
@@ -73,10 +74,21 @@ const PizzaForm = () => {
   return (
     <div>
       <GlobalTypography />
-      <h2>Place Order</h2>
+      <Typography variant="h4" align="center" color="primary" gutterBottom>
+        Welcome to Pizza Shop
+      </Typography>
+      <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '10vh',
+      }}
+    >
       <Button variant="contained" onClick={() => setModalOpen(true)}>
         Order Pizza
       </Button>
+    </Box>
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}

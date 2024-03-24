@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
-  Grid,
   Paper,
   Table,
   TableBody,
@@ -12,7 +11,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { deleteOrder, updateOrderStage } from "../redux/actions/pizzaActions";
+import { deleteOrder } from "../redux/actions/pizzaActions";
 
 const MainDisplay = () => {
   const dispatch = useDispatch();
@@ -21,13 +20,11 @@ const MainDisplay = () => {
   const [totalDeliveredItems, setTotalDeliveredItems] = useState(0);
 
   useEffect(() => {
-    // Calculate total delivered items
     const totalDelivered = orders.filter(
       (order) => order.stage === "Order Picked"
     ).length;
     setTotalDeliveredItems(totalDelivered);
 
-    // Calculate time elapsed for each order
     const interval = setInterval(() => {
       const updatedTimeElapsed = {};
       orders.forEach((order) => {
@@ -39,17 +36,13 @@ const MainDisplay = () => {
         updatedTimeElapsed[id] = minutesElapsed;
       });
       setTimeElapsed(updatedTimeElapsed);
-    }, 1000); // Update every second
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [orders]);
 
   const handleCancelOrder = (orderId) => {
     dispatch(deleteOrder(orderId));
-  };
-
-  const handleMoveToNextStage = (orderId, stage) => {
-    dispatch(updateOrderStage(orderId, stage));
   };
 
   return (
@@ -75,16 +68,12 @@ const MainDisplay = () => {
                 <TableCell>{order.stage}</TableCell>
                 <TableCell>{timeElapsed[order.id]} min</TableCell>
                 <TableCell>
-                  {order.stage === "Order in Making" && (
-                    <Button onClick={() => handleCancelOrder(order.id)}>
-                      Cancel
-                    </Button>
-                  )}
-                  {/* {(order.stage === 'Order Placed' || order.stage === 'Order Ready') && (
-                    <Button onClick={() => handleMoveToNextStage(order.id, getNextStage(order.stage))}>
-                      Move to {getNextStage(order.stage)}
-                    </Button>
-                  )} */}
+                  {order.stage === "Order in Making" ||
+                    (order.stage === "Order Placed" && (
+                      <Button onClick={() => handleCancelOrder(order.id)}>
+                        Cancel
+                      </Button>
+                    ))}
                 </TableCell>
               </TableRow>
             ))}
@@ -94,18 +83,5 @@ const MainDisplay = () => {
     </div>
   );
 };
-
-// const getNextStage = (currentStage) => {
-//   switch (currentStage) {
-//     case 'Order Placed':
-//       return 'Order in Making';
-//     case 'Order in Making':
-//       return 'Order Ready';
-//     case 'Order Ready':
-//       return 'Order Picked';
-//     default:
-//       return '';
-//   }
-// };
 
 export default MainDisplay;

@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { deleteOrder, updateOrderStage } from "../redux/actions/pizzaActions";
 
-const MainDisplay = () => {
+const PizzaOrders = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.order.orders);
   const [timeElapsed, setTimeElapsed] = useState({});
 
-  const handleCancelOrder = (orderId) => {
-    dispatch(deleteOrder(orderId));
-  };
+  // const handleCancelOrder = (orderId) => {
+  //   dispatch(deleteOrder(orderId));
+  // };
 
   const handleMoveToNextStage = (orderId, stage) => {
-    dispatch(updateOrderStage(orderId, stage));
+    const updatedOrders = orders.map((order) => {
+      if (order.id === orderId) {
+        return {
+          ...order,
+          stage,
+          startTime: Date.now(),
+        };
+      }
+      return order;
+    });
+    dispatch(updateOrderStage(updatedOrders));
   };
 
   useEffect(() => {
@@ -24,16 +34,16 @@ const MainDisplay = () => {
         let stageTime;
         switch (stage) {
           case "Order Placed":
-            stageTime = size === "Small" ? 180 : size === "Medium" ? 240 : 300; // Set stage time based on size
+            stageTime = size === "Small" ? 180 : size === "Medium" ? 240 : 300;
             break;
           case "Order in Making":
-            stageTime = size === "Small" ? 180 : size === "Medium" ? 240 : 300; // Set stage time based on size
+            stageTime = size === "Small" ? 180 : size === "Medium" ? 240 : 300;
             break;
           case "Order Ready":
-            stageTime = size === "Small" ? 180 : size === "Medium" ? 240 : 300; // Set stage time based on size
+            stageTime = size === "Small" ? 180 : size === "Medium" ? 240 : 300;
             break;
           case "Order Picked":
-            stageTime = 0; // Set stage time to 0 for "Order Picked" stage
+            stageTime = 0;
             break;
           default:
             stageTime = 0;
@@ -42,18 +52,17 @@ const MainDisplay = () => {
         const minutesElapsed = Math.floor(
           (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
         );
-        // Reset the timer for the current stage if stage changes
         if (timeElapsed[id] === undefined || stage !== timeElapsed[id].stage) {
-          updatedTimeElapsed[id] = { stage: stage, time: 0 }; 
+          updatedTimeElapsed[id] = { stage: stage, time: 0 };
         } else {
           updatedTimeElapsed[id] = {
             stage: stage,
-            time: minutesElapsed > stageTime ? stageTime : minutesElapsed, 
+            time: minutesElapsed > stageTime ? stageTime : minutesElapsed,
           };
         }
       });
       setTimeElapsed(updatedTimeElapsed);
-    }, 1000); // Update every second
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [orders, timeElapsed]);
@@ -74,7 +83,6 @@ const MainDisplay = () => {
     <div>
       <h2>Main Display</h2>
       <div className="orders-container">
-        {/* Display each stage in different columns */}
         <Grid container spacing={2}>
           {[
             "Order Placed",
@@ -98,25 +106,37 @@ const MainDisplay = () => {
                             : "",
                       }}
                     >
-                      <Typography variant="body1">
-                        Order ID: {order.id}
-                      </Typography>
-                      <Typography variant="body1">
-                        Type: {order.type}
-                      </Typography>
-                      <Typography variant="body1">
-                        Size: {order.size}
-                      </Typography>
-                      <Typography variant="body1">
-                        Base: {order.base}
-                      </Typography>
-                      <Typography variant="body1">
-                        Time Elapsed:{" "}
-                        {timeElapsed[order.id] && timeElapsed[order.id].time}{" "}
-                        min
-                      </Typography>
+                      <Box sx={{ p: 2 }}>
+                        <Typography variant="body1">
+                          Order ID: {order.id}
+                        </Typography>
+                        <Typography variant="body1">
+                          Type: {order.type}
+                        </Typography>
+                        <Typography variant="body1">
+                          Size: {order.size}
+                        </Typography>
+                        <Typography variant="body1">
+                          Base: {order.base}
+                        </Typography>
+                        <Typography variant="body1">
+                          Time Elapsed:{" "}
+                          {timeElapsed[order.id] && timeElapsed[order.id].time}{" "}
+                          min
+                        </Typography>
+                      </Box>
                       {order.stage !== "Order Picked" && (
                         <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "black",
+                            color: "#fff", 
+                            borderRadius: "20px", 
+                            padding: "10px 20px",
+                            "&:hover": {
+                              backgroundColor: "#388e3c", 
+                            },
+                          }}
                           onClick={() =>
                             handleMoveToNextStage(order.id, getNextStage(stage))
                           }
@@ -124,11 +144,11 @@ const MainDisplay = () => {
                           Move to {getNextStage(stage)}
                         </Button>
                       )}
-                      {order.stage === "Order Picked" && (
+                      {/* {order.stage === "Order Picked" && (
                         <Button onClick={() => handleCancelOrder(order.id)}>
                           Cancel
                         </Button>
-                      )}
+                      )} */}
                     </Paper>
                   )
               )}
@@ -153,4 +173,4 @@ const getNextStage = (currentStage) => {
   }
 };
 
-export default MainDisplay;
+export default PizzaOrders;

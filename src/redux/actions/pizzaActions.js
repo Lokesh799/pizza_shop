@@ -15,7 +15,9 @@ export const deleteOrder = (orderId) => ({
   payload: orderId,
 });
 
-export const updateOrderStage = (orderId, stage) => ({
-  type: UPDATE_ORDER_STAGE,
-  payload: { orderId, stage },
-});
+export const updateOrderStage = (updatedOrders) => {
+  return {
+    type: UPDATE_ORDER_STAGE,
+    payload: updatedOrders,
+  };
+};

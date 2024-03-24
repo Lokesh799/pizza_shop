@@ -7,6 +7,7 @@ const initialState = {
 const orderReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_ORDER:
+      console.log(action.payload, "payload====");
       return {
         ...state,
         orders: [...state.orders, { ...action.payload, stage: "Order Placed" }],
@@ -19,11 +20,7 @@ const orderReducer = (state = initialState, action) => {
     case UPDATE_ORDER_STAGE:
       return {
         ...state,
-        orders: state.orders.map((order) =>
-          order.id === action.payload.orderId
-            ? { ...order, stage: action.payload.stage }
-            : order
-        ),
+        orders: action.payload,
       };
     default:
       return state;
